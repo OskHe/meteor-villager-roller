@@ -48,6 +48,8 @@ import net.minecraft.network.packet.s2c.play.SetTradeOffersS2CPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -65,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
 public class VillagerRoller extends Module {
@@ -548,29 +551,39 @@ public class VillagerRoller extends Module {
                     if (e.minLevel <= 0) {
                         int ml = e.getMaxLevel();
                         if (!e.isCustom() && enchantLevel != ml) {
-                            info(String.format("Found enchant %s but it is not max level: %d (max) > %d (found)",
-                                enchantName, ml, enchantLevel));
+                            /*/info(String.format("Found enchant %s but it is not max level: %d (max) > %d (found)",
+                                enchantName, ml, enchantLevel));*/
+                            info(Text.literal(String.format("%s lvl: %d", enchantName, enchantLevel)).formatted(Formatting.RED));
                             continue;
                         }
                     } else if (e.minLevel > enchantLevel) {
-                        info(String.format("Found enchant %s but it has too low level: %d (requested level) > %d (rolled level)",
-                            enchantName, e.minLevel, enchantLevel));
+                        /*info(String.format("Found enchant %s but it has too low level: %d (requested level) > %d (rolled level)",
+                            enchantName, e.minLevel, enchantLevel));*/
+                        info(Text.literal(String.format("%s lvl: %d", enchantName, enchantLevel)).formatted(Formatting.RED));
                         continue;
                     }
                     if (e.maxCost > 0 && offer.getOriginalFirstBuyItem().getCount() > e.maxCost) {
-                        info(String.format("Found enchant %s but it costs too much: %s (max price) < %d (cost)",
-                            enchantName, e.maxCost, offer.getOriginalFirstBuyItem().getCount()));
+                        /*info(String.format("Found enchant %s but it costs too much: %s (max price) < %d (cost)",
+                            enchantName, e.maxCost, offer.getOriginalFirstBuyItem().getCount()));*/
+                        info(Text.literal(String.format("%s cost: %d", enchantName, offer.getOriginalFirstBuyItem().getCount())).formatted(Formatting.RED));
                         continue;
                     }
                     if (disableIfFound.get()) e.enabled = false;
                     toggle();
+
+                    info(Text.literal(String.format("Found: %s", enchantName)).formatted(Formatting.GREEN));
+
                     if (enablePlaySound.get() && !sound.get().isEmpty()) {
                         mc.getSoundManager().play(PositionedSoundInstance.master(sound.get().get(0),
                             soundPitch.get().floatValue(), soundVolume.get().floatValue()));
                     }
                     break;
                 }
-                if (!found) info(String.format("Found enchant %s but it is not in the list.", enchantName));
+                if (!found) {
+                    //info(String.format("Found enchant %s but it is not in the list.", enchantName));
+                    info(Text.literal(enchantName).formatted(Formatting.RED));
+                }
+
             }
         }
 
