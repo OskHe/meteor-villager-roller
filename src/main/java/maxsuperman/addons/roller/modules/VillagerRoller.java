@@ -75,8 +75,6 @@ import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import java.util.*;
 
-import static meteordevelopment.meteorclient.MeteorClient.mc;
-
 public class VillagerRoller extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgSound = settings.createGroup("Sound");
